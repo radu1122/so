@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#define INT_MAX 10
 typedef struct mapElem {
     unsigned char key[256];
     int used;
@@ -126,10 +126,6 @@ int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value) {
     memcpy(m->data[index].key, key, strlen(key));
     m->data[index].used = 1;
     m->currSize++;
-    printf("currsize: %d\n", m->currSize);
-    printf("index: %d\n", index);
-//    printf("m->data[index].data: %s\n", m->data[index].data);
-//    printf("m->data[index].key: %s\n", m->data[index].key);
 
     return 1;
 }
@@ -138,21 +134,21 @@ int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value){
     int i;
     int curr;
 
+    value[0] = 0;
+
     if (m->currSize <= 0) {
         return -1;
     }
 
     curr = (int) hashing(m, key);
-    printf("curr: %d\n", curr);
 
     for(i = 0; i < m->size; i++) {
-        printf("m->data[curr].data: %s\n", m->data[curr].data);
         if(m->data[curr].used == 1) {
             if(strcmp(m->data[curr].key, key) == 0) {
                 memcpy(value, m->data[curr].data, strlen(m->data[curr].data));
                 value[strlen(m->data[curr].data)] = 0;
+                return 1;
             }
-            return 1;
         }
 
         curr = (curr + 1) % m->size;
