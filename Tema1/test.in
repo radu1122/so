@@ -1,16 +1,9 @@
-#ifndef _TEST38_H_
-#define _TEST38_H_
+#define VAR0 1
 
-#ifdef CUSTOM_DBG
-#define DEBUG_STR CUSTOM_DBG
-#else
-#define DEBUG_STR "my debugging"
-#endif
-
-#endif /* _TEST38_H_ */
-
-int main()
+int main(int argc, char **argv)
 {
-	debug;
-	return 0;
+    int y = VAR0 + 1;
+    printf("VAR0 = %d\n", VAR0);
+
+    return 0;
 }
