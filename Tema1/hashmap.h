@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#define INT_MAX 10
 typedef struct mapElem {
     unsigned char key[256];
     int used;
@@ -13,16 +12,16 @@ typedef struct hashmap {
     int currSize;
     mapElem *data;
 } hashmap;
-unsigned int hashing(hashmap * m, unsigned char *str);
-hashmap * newHashmap();
-int getNewKey(hashmap* m, unsigned char *key);
-int mapResize(hashmap* m);
-int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value);
-int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value);
-void hashmapFree(hashmap * m);
+static unsigned int hashing(hashmap * m, unsigned char *str);
+static hashmap * newHashmap();
+static int getNewKey(hashmap* m, unsigned char *key);
+static int mapResize(hashmap* m);
+static int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value);
+static int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value);
+static void hashmapFree(hashmap * m);
 
 // https://stackoverflow.com/questions/7666509/hash-function-for-string
-unsigned int hashing(hashmap * m, unsigned char *str) {
+static unsigned int hashing(hashmap * m, unsigned char *str) {
     unsigned long hash = 5381;
     int c;
 
@@ -33,7 +32,7 @@ unsigned int hashing(hashmap * m, unsigned char *str) {
 }
 
 
-hashmap * newHashmap() {
+static hashmap * newHashmap() {
     hashmap* map = (hashmap*) malloc(sizeof(hashmap));
     if(!map) exit(12);
 
@@ -52,7 +51,7 @@ hashmap * newHashmap() {
     return map;
 }
 
-int getNewKey(hashmap* m, unsigned char *key) {
+static int getNewKey(hashmap* m, unsigned char *key) {
     int curr;
     int i;
 
@@ -77,7 +76,7 @@ int getNewKey(hashmap* m, unsigned char *key) {
     return -1;
 }
 
-int mapResize(hashmap* m) {
+static int mapResize(hashmap* m) {
     int i;
     int oldSize;
     int status;
@@ -111,7 +110,7 @@ int mapResize(hashmap* m) {
     return 1;
 }
 
-int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value) {
+static int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value) {
     int index;
 
     index = getNewKey(m, key);
@@ -130,7 +129,7 @@ int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value) {
     return 1;
 }
 
-int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value){
+static int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value) {
     int i;
     int curr;
 
@@ -159,7 +158,7 @@ int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value){
 }
 
 
-void hashmapFree(hashmap * m){
+static void hashmapFree(hashmap * m){
     free(m->data);
     free(m);
 }

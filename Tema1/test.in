@@ -1,0 +1,16 @@
+#ifndef _TEST38_H_
+#define _TEST38_H_
+
+#ifdef CUSTOM_DBG
+#define DEBUG_STR CUSTOM_DBG
+#else
+#define DEBUG_STR "my debugging"
+#endif
+
+#endif /* _TEST38_H_ */
+
+int main()
+{
+	debug;
+	return 0;
+}
