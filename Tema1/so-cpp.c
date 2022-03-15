@@ -64,6 +64,12 @@ int main(int argc, char *argv[]) {
     memset(inFile, 0, MAX_LEN);
     memset(outFile, 0, MAX_LEN);
     while(i < argc) {
+        if (argv[i][0] == '-') {
+            if (argv[i][1] != 'D' && argv[i][1] != 'I' && argv[i][1] != 'o') {
+                fprintf(stderr, "Bad arguments");
+                return -1;
+            }
+        }
         if (step == 0) {
             if (argv[i][0] == '-') {
                 if (argv[i][1] != 'D') {
