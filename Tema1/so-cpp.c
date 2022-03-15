@@ -274,6 +274,15 @@ int main(int argc, char *argv[]) {
             char key[MAX_LEN];
             sscanf(line, "#if %s", key);
             activeIf = checkIfIsTrue(map, key);
+        }  else if (line[0] == '#' && line[1] == 'u' && line[2] == 'n' && line[3] == 'd') {
+            char key[MAX_LEN];
+            sscanf(line, "#undef %s", key);
+            char waitedValue[MAX_LEN];
+            int status = hashmapGetOne(map, key, waitedValue);
+
+            if (status == 1) {
+                hashmapRemoveOne(map, key);
+            }
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'l' && line[3] == 'i') {
             if (activeIf == 1) {
                 char key[MAX_LEN];

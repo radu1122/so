@@ -19,6 +19,7 @@ static int mapResize(hashmap* m);
 static int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value);
 static int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value);
 static void hashmapFree(hashmap * m);
+static int hashmapRemoveOne(hashmap * m, unsigned char * key);
 
 // https://stackoverflow.com/questions/7666509/hash-function-for-string
 static unsigned int hashing(hashmap * m, unsigned char *str) {
@@ -156,6 +157,36 @@ static int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value
 
     return -1;
 }
+
+static int hashmapRemoveOne(hashmap * m, unsigned char * key) {
+    int i;
+    int curr;
+
+    if (m->currSize <= 0) {
+        return -1;
+    }
+
+    curr = (int) hashing(m, key);
+
+    for(i = 0; i < m->size; i++) {
+        if(m->data[curr].used == 1) {
+            if(strcmp(m->data[curr].key, key) == 0) {
+                strcpy(m->data[curr].data,"");
+                strcpy(m->data[curr].key, "");
+                m->data[curr].used = 0;
+                m->currSize = m->currSize - 1;
+                return 1;
+            }
+        }
+
+        curr = (curr + 1) % m->size;
+    }
+
+
+    return -1;
+}
+
+
 
 
 static void hashmapFree(hashmap * m){
