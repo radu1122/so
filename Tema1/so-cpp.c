@@ -208,10 +208,10 @@ int main(int argc, char *argv[]) {
             char key[MAX_LEN];
             sscanf(line, "#define %s %[^\n]", key, value);
             if (value[strlen(value) - 1] != '\\') {
-                if (value[0] == '"') {
-                    memmove(value, value + 1, strlen(value));
-                    value[strlen(value) - 1] = '\0';
-                }
+//                if (value[0] == '"') {
+//                    memmove(value, value + 1, strlen(value));
+//                    value[strlen(value) - 1] = '\0';
+//                }
                 char elems[MAX_LEN][MAX_LEN];
                 memset(elems, 0, MAX_LEN * MAX_LEN);
                 int tokensNo = tokenize(value, elems);
