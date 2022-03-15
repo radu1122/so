@@ -1,5 +1,5 @@
 build:
-	gcc -o tema1 tema1.c so-cpp.c -Wall
+	cl so-cpp.c /MD /Feso-cpp.exe
 
 clean:
-	rm so-cpp
+	rm so-cpp.exe
