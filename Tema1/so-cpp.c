@@ -154,10 +154,10 @@ int main(int argc, char *argv[]) {
     }
 
 
-    for(int i = 0; i < pathsNo; i++) {
-        printf("path %d: %s\n", i, paths[i]);
-    }
-    printf("%s\n", inFile);
+//    for(int i = 0; i < pathsNo; i++) {
+//        printf("path %d: %s\n", i, paths[i]);
+//    }
+//    printf("%s\n", inFile);
     FILE * fIn = NULL;
     FILE * fOut = NULL;
     if (existsInFile == 1) {
@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
                     strcat(finalValue, elems[j]);
                 }
                 hashmapPut(map, key, finalValue);
-                printf("key: %s\nfinal val: %s\n", key, finalValue);
+//                printf("key: %s\nfinal val: %s\n", key, finalValue);
             } else {
                 char finalValue[MAX_LEN];
                 char elems[MAX_LEN][MAX_LEN];
@@ -252,7 +252,7 @@ int main(int argc, char *argv[]) {
                 } while (sw == 1);
 
                 hashmapPut(map, key, finalValue);
-                printf("key: %s\nfinal val: %s\n", key, finalValue);
+//                printf("key: %s\nfinal val: %s\n", key, finalValue);
             }
         } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == ' ') {
             char key[MAX_LEN];
