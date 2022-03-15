@@ -160,6 +160,7 @@ int main(int argc, char *argv[]) {
                 memcpy(outFile, argv[i], strlen(argv[i]));
                 outFile[strlen(argv[i])] = 0;
                 i++;
+                existsOutFile = 1;
             }
             if (argc > i) {
                 fprintf(stderr, "bad input file");
