@@ -161,6 +161,10 @@ int main(int argc, char *argv[]) {
                 outFile[strlen(argv[i])] = 0;
                 i++;
             }
+            if (argc > i) {
+                fprintf(stderr, "bad input file");
+                return -1;
+            }
         }
     }
 
