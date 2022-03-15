@@ -140,6 +140,7 @@ int main(int argc, char *argv[]) {
                 memcpy(inFile, argv[i], strlen(argv[i]));
                 inFile[strlen(argv[i])] = 0;
                 i++;
+                step++;
             }
         } else if (step == 3) {
             if (argv[i][0] == '-' && argv[i][1] == 'o') {
@@ -162,7 +163,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-
 
 //    for(int i = 0; i < pathsNo; i++) {
 //        printf("path %d: %s\n", i, paths[i]);
