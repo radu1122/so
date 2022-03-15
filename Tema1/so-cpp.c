@@ -3,9 +3,8 @@
 #include <stdlib.h>
 #define MAX_LEN 256
 
-// adapted from https://stackoverflow.com/questions/26597977/split-string-with-multiple-delimiters-using-strtok-in-c
 int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
-    char delimit[] = "\\t []{}<>=+-*/%!&|^.,:;()\\";
+    char delimit[] = "\t \"[]{}<>=+-*/%!&|^.,:;()\\";
 
     int n = 0;
     int i = 0;
@@ -23,6 +22,7 @@ int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
             while(strchr(delimit, input[i]) == NULL) {
                 i++;
             }
+
             strncpy(elems[n], input + first, i - first);
             n++;
         }
@@ -155,6 +155,10 @@ int main(int argc, char *argv[]) {
                     outFile[strlen(argv[i])] = 0;
                 }
                 i++;
+            } else {
+                memcpy(outFile, argv[i], strlen(argv[i]));
+                outFile[strlen(argv[i])] = 0;
+                i++;
             }
         }
     }
@@ -219,6 +223,7 @@ int main(int argc, char *argv[]) {
                         memset(waitedValue, 0, MAX_LEN);
                     }
                     strcat(finalValue, elems[j]);
+
                 }
                 hashmapPut(map, key, finalValue);
 //                printf("key: %s\nfinal val: %s\n", key, finalValue);
@@ -310,24 +315,32 @@ int main(int argc, char *argv[]) {
             char finalLine[256];
             strcpy(finalLine, "");
             int ghilimeleNumbers = 0;
+
             for (int j = 0; j < tokensNo; j++) {
                 if (strcmp(elems[j], "\"") == 0) {
                     ghilimeleNumbers++;
+                    strcat(finalLine, elems[j]);
                     continue;
                 }
                 char waitedValue[MAX_LEN];
                 int status = hashmapGetOne(map, elems[j], waitedValue);
                 if (status == 1) {
+
                     if (ghilimeleNumbers % 2 == 0) {
                         strcpy(elems[j], waitedValue);
                     }
                 }
                 strcat(finalLine, elems[j]);
+
             }
-            if (existsOutFile == 1) {
-            } else {
-                fprintf(stdout, "%s\n", finalLine);
+            if (strlen(finalLine) != 0) {
+                if (existsOutFile == 1) {
+                    fprintf(fOut, "%s\n", finalLine);
+                } else {
+                    fprintf(stdout, "%s\n", finalLine);
+                }
             }
+
         }
 
     }
