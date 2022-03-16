@@ -190,6 +190,9 @@ int main(int argc, char *argv[]) {
     int activeIf = 0;
     int activeIfD = 0;
 
+    int ifsArr[10];
+    int ifPpointer = -1;
+
     while (1) {
         if (existsInFile == 1) {
             statusFgets = fgets(line, MAX_LEN, fIn);
@@ -201,7 +204,7 @@ int main(int argc, char *argv[]) {
         }
         line[strcspn(line, "\n")] = 0;
         if (line[0] == '#' && line[1] == 'd') {
-            if (activeIf == 1 || activeIfD == 1) {
+            if (ifsArr[ifPpointer] > 0) {
                 continue;
             }
             char value[MAX_LEN];
@@ -274,6 +277,16 @@ int main(int argc, char *argv[]) {
             char key[MAX_LEN];
             sscanf(line, "#if %s", key);
             activeIf = checkIfIsTrue(map, key);
+            if (ifPpointer == -1) {
+                ifPpointer = 0;
+            } else {
+                ifPpointer++;
+            }
+            if (activeIf == 1) {
+                ifsArr[ifPpointer] = 1;
+            } else {
+                ifsArr[ifPpointer] = -1;
+            }
         }  else if (line[0] == '#' && line[1] == 'u' && line[2] == 'n' && line[3] == 'd') {
             char key[MAX_LEN];
             sscanf(line, "#undef %s", key);
@@ -284,25 +297,21 @@ int main(int argc, char *argv[]) {
                 hashmapRemoveOne(map, key);
             }
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'l' && line[3] == 'i') {
-            if (activeIf == 1) {
+            if (ifsArr[ifPpointer] == 1) {
                 char key[MAX_LEN];
                 sscanf(line, "#elif %s", key);
                 activeIf = checkIfIsTrue(map, key);
+                if (activeIf == 1) {
+                    ifsArr[ifPpointer] = 1;
+                } else {
+                    ifsArr[ifPpointer] = -1;
+                }
             }
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'l' && line[3] == 's') {
-            if (activeIf == 1) {
-                activeIf = 0;
-            } else {
-                activeIf = 1;
-            }
-            if (activeIfD == 1) {
-                activeIfD = 0;
-            } else {
-                activeIfD = 1;
-            }
+            ifsArr[ifPpointer] = -ifsArr[ifPpointer];
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'n' && line[3] == 'd') {
-            activeIf = 0;
-            activeIfD = 0;
+            ifsArr[ifPpointer] = 0;
+            ifPpointer--;
         } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == 'd') {
             char key[MAX_LEN];
             sscanf(line, "#ifdef %s", key);
@@ -310,6 +319,16 @@ int main(int argc, char *argv[]) {
             int status = hashmapGetOne(map, key, waitedValue);
             if (status != 1) {
                 activeIfD = 1;
+            }
+            if (ifPpointer == -1) {
+                ifPpointer = 0;
+            } else {
+                ifPpointer++;
+            }
+            if (activeIfD == 1) {
+                ifsArr[ifPpointer] = 2;
+            } else {
+                ifsArr[ifPpointer] = -2;
             }
         }  else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == 'n') {
             char key[MAX_LEN];
@@ -319,8 +338,18 @@ int main(int argc, char *argv[]) {
             if (status == 1) {
                 activeIfD = 1;
             }
+            if (ifPpointer == -1) {
+                ifPpointer = 0;
+            } else {
+                ifPpointer++;
+            }
+            if (activeIfD == 1) {
+                ifsArr[ifPpointer] = 2;
+            } else {
+                ifsArr[ifPpointer] = -2;
+            }
         } else if (line[0] != '#') {
-            if (activeIf == 1 || activeIfD == 1) {
+            if (ifsArr[ifPpointer] > 0) {
                 continue;
             }
             char elems[MAX_LEN][MAX_LEN];
