@@ -227,23 +227,16 @@ int main(int argc, char *argv[]) {
             char key[MAX_LEN];
             memset(value, 0, MAX_LEN);
 
-            int numberOfSpaces = 0;
-
-            for (int j = 0; j < strlen(line); j++) {
-                if (line[j] == ' ') {
-                    numberOfSpaces++;
-                }
-            }
 
             sscanf(line, "#define %s %[^\n]", key, value);
-            if (value[strlen(value) - 1] != '\\') {
-//                if (value[0] == '"') {
-//                    memmove(value, value + 1, strlen(value));
-//                    value[strlen(value) - 1] = '\0';
-//                }
-                char elems[MAX_LEN][MAX_LEN];
-                memset(elems, 0, MAX_LEN * MAX_LEN);
-                if (numberOfSpaces < 2) {
+            if (strlen(value) > 0) {
+                if (value[strlen(value) - 1] != '\\') {
+    //                if (value[0] == '"') {
+    //                    memmove(value, value + 1, strlen(value));
+    //                    value[strlen(value) - 1] = '\0';
+    //                }
+                    char elems[MAX_LEN][MAX_LEN];
+                    memset(elems, 0, MAX_LEN * MAX_LEN);
                     int tokensNo = tokenize(value, elems);
                     char finalValue[MAX_LEN];
 
@@ -261,48 +254,47 @@ int main(int argc, char *argv[]) {
 
                     }
                     hashmapPut(map, key, finalValue);
+    //                printf("key: %s\nfinal val: %s\n", key, finalValue);
                 } else {
-                    hashmapPut(map, key, "exists");
+                    char finalValue[MAX_LEN];
+                    char elems[MAX_LEN][MAX_LEN];
+                    int sw = 1;
+                    strcpy(line, value);
+                    memset(finalValue, 0, MAX_LEN);
+                    do {
+                        if (line[strlen(line) - 1] == '\\') {
+                            line[strlen(line) - 1] = '\0';
+                        } else {
+                            sw = 0;
+                        }
+                        memset(elems, 0, MAX_LEN * MAX_LEN);
+                        int tokensNo = tokenize(line, elems);
+                        for (int j = 0; j < tokensNo; j++) {
+                            char waitedValue[MAX_LEN];
+                            memset(waitedValue, 0, MAX_LEN);
+                            status = hashmapGetOne(map, elems[j], waitedValue);
+                            if (status == 1) {
+                                strcpy(elems[j], waitedValue);
+                            }
+                            if (strcmp(elems[j],"\"") != 0 && strcmp(elems[j], " ")) {
+                                strcat(finalValue, elems[j]);
+                            }
+                        }
+                        if (existsInFile == 1) {
+                            statusFgets = fgets(line, MAX_LEN, fIn);
+                        } else {
+                            statusFgets = fgets(line, MAX_LEN, stdin);
+                        }
+                        line[strcspn(line, "\n")] = 0;
+
+
+                    } while (sw == 1);
+
+                    hashmapPut(map, key, finalValue);
+    //                printf("key: %s\nfinal val: %s\n", key, finalValue);
                 }
-
-//                printf("key: %s\nfinal val: %s\n", key, finalValue);
             } else {
-                char finalValue[MAX_LEN];
-                char elems[MAX_LEN][MAX_LEN];
-                int sw = 1;
-                strcpy(line, value);
-                memset(finalValue, 0, MAX_LEN);
-                do {
-                    if (line[strlen(line) - 1] == '\\') {
-                        line[strlen(line) - 1] = '\0';
-                    } else {
-                        sw = 0;
-                    }
-                    memset(elems, 0, MAX_LEN * MAX_LEN);
-                    int tokensNo = tokenize(line, elems);
-                    for (int j = 0; j < tokensNo; j++) {
-                        char waitedValue[MAX_LEN];
-                        memset(waitedValue, 0, MAX_LEN);
-                        status = hashmapGetOne(map, elems[j], waitedValue);
-                        if (status == 1) {
-                            strcpy(elems[j], waitedValue);
-                        }
-                        if (strcmp(elems[j],"\"") != 0 && strcmp(elems[j], " ")) {
-                            strcat(finalValue, elems[j]);
-                        }
-                    }
-                    if (existsInFile == 1) {
-                        statusFgets = fgets(line, MAX_LEN, fIn);
-                    } else {
-                        statusFgets = fgets(line, MAX_LEN, stdin);
-                    }
-                    line[strcspn(line, "\n")] = 0;
-
-
-                } while (sw == 1);
-
-                hashmapPut(map, key, finalValue);
-//                printf("key: %s\nfinal val: %s\n", key, finalValue);
+                hashmapPut(map, key, value);
             }
         } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == ' ') {
             char key[MAX_LEN];
