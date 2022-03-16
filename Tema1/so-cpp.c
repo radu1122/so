@@ -32,7 +32,7 @@ int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
 
 int checkIfIsTrue(hashmap * map, char key[MAX_LEN]) {
     char waitedValue[MAX_LEN];
-    int status = hashmapGetOne(map, key, waitedValue);
+    int status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
     if (status == 1) {
         strcpy(key, waitedValue);
     }
@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
                     for (int j = 0; j < tokensNo; j++) {
                         char waitedValue[MAX_LEN];
                         memset(waitedValue, 0, MAX_LEN);
-                        status = hashmapGetOne(map, elems[j], waitedValue);
+                        status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                         if (status == 1) {
                             strcpy(elems[j], waitedValue);
                         } else {
@@ -253,7 +253,7 @@ int main(int argc, char *argv[]) {
                         strcat(finalValue, elems[j]);
 
                     }
-                    hashmapPut(map, key, finalValue);
+                    hashmapPut(map, (unsigned char *) key, (unsigned char *) finalValue);
     //                printf("key: %s\nfinal val: %s\n", key, finalValue);
                 } else {
                     char finalValue[MAX_LEN];
@@ -272,7 +272,7 @@ int main(int argc, char *argv[]) {
                         for (int j = 0; j < tokensNo; j++) {
                             char waitedValue[MAX_LEN];
                             memset(waitedValue, 0, MAX_LEN);
-                            status = hashmapGetOne(map, elems[j], waitedValue);
+                            status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                             if (status == 1) {
                                 strcpy(elems[j], waitedValue);
                             }
@@ -290,11 +290,11 @@ int main(int argc, char *argv[]) {
 
                     } while (sw == 1);
 
-                    hashmapPut(map, key, finalValue);
+                    hashmapPut(map, (unsigned char *) key, (unsigned char *) finalValue);
     //                printf("key: %s\nfinal val: %s\n", key, finalValue);
                 }
             } else {
-                hashmapPut(map, key, value);
+                hashmapPut(map, (unsigned char *) key, (unsigned char *) value);
             }
         } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == ' ') {
             char key[MAX_LEN];
@@ -314,10 +314,10 @@ int main(int argc, char *argv[]) {
             char key[MAX_LEN];
             sscanf(line, "#undef %s", key);
             char waitedValue[MAX_LEN];
-            int status = hashmapGetOne(map, key, waitedValue);
+            int status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
 
             if (status == 1) {
-                hashmapRemoveOne(map, key);
+                hashmapRemoveOne(map, (unsigned char *) key);
             }
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'l' && line[3] == 'i') {
             if (ifsArr[ifPpointer] == 1) {
@@ -383,7 +383,7 @@ int main(int argc, char *argv[]) {
             char key[MAX_LEN];
             sscanf(line, "#ifdef %s", key);
             char waitedValue[MAX_LEN];
-            int status = hashmapGetOne(map, key, waitedValue);
+            int status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
             if (status != 1) {
                 activeIfD = 1;
             }
@@ -401,7 +401,7 @@ int main(int argc, char *argv[]) {
             char key[MAX_LEN];
             sscanf(line, "#ifndef %s", key);
             char waitedValue[MAX_LEN];
-            int status = hashmapGetOne(map, key, waitedValue);
+            int status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
             if (status == 1) {
                 activeIfD = 1;
             }
@@ -435,7 +435,7 @@ int main(int argc, char *argv[]) {
                     continue;
                 }
                 char waitedValue[MAX_LEN];
-                int status = hashmapGetOne(map, elems[j], waitedValue);
+                int status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                 if (status == 1) {
 
                     if (ghilimeleNumbers % 2 == 0) {

@@ -66,7 +66,7 @@ static int getNewKey(hashmap* m, unsigned char *key) {
         }
 
         if(m->data[curr].used == 1) {
-            if(strcmp(m->data[curr].key, key) == 0) {
+            if(strcmp((const char *) m->data[curr].key,(const char *) key) == 0) {
                 return curr;
             }
         }
@@ -122,8 +122,8 @@ static int hashmapPut(hashmap * m, unsigned char * key, unsigned char * value) {
         index = getNewKey(m, key);
     }
 
-    memcpy(m->data[index].data, value, strlen(value));
-    memcpy(m->data[index].key, key, strlen(key));
+    memcpy(m->data[index].data, value, strlen((const char *) value));
+    memcpy(m->data[index].key, key, strlen((const char *) key));
     m->data[index].used = 1;
     m->currSize++;
 
@@ -144,9 +144,9 @@ static int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value
 
     for(i = 0; i < m->size; i++) {
         if(m->data[curr].used == 1) {
-            if(strcmp(m->data[curr].key, key) == 0) {
-                memcpy(value, m->data[curr].data, strlen(m->data[curr].data));
-                value[strlen(m->data[curr].data)] = 0;
+            if(strcmp((const char *) m->data[curr].key, (const char *) key) == 0) {
+                memcpy(value, m->data[curr].data, strlen((const char *) m->data[curr].data));
+                value[strlen((const char *) m->data[curr].data)] = 0;
                 return 1;
             }
         }
@@ -170,9 +170,9 @@ static int hashmapRemoveOne(hashmap * m, unsigned char * key) {
 
     for(i = 0; i < m->size; i++) {
         if(m->data[curr].used == 1) {
-            if(strcmp(m->data[curr].key, key) == 0) {
-                strcpy(m->data[curr].data,"");
-                strcpy(m->data[curr].key, "");
+            if(strcmp((const char *) m->data[curr].key, (const char *) key) == 0) {
+                strcpy((char *) m->data[curr].data,"");
+                strcpy((char *) m->data[curr].key, "");
                 m->data[curr].used = 0;
                 m->currSize = m->currSize - 1;
                 return 1;
