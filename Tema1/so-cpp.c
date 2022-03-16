@@ -399,7 +399,7 @@ int main(int argc, char *argv[]) {
             }
         }  else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == 'n') {
             char key[MAX_LEN];
-            sscanf(line, "#ifdef %s", key);
+            sscanf(line, "#ifndef %s", key);
             char waitedValue[MAX_LEN];
             int status = hashmapGetOne(map, key, waitedValue);
             if (status == 1) {

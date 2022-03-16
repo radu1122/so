@@ -1,6 +1,12 @@
-#ifndef _TEST_33_H_
-#define _TEST_33_H_
+#ifndef _TEST38_H_
+#define _TEST38_H_
 
-int var;
+#ifdef CUSTOM_DBG
+#define DEBUG_STR CUSTOM_DBG
+#else
+#define DEBUG_STR "my debugging"
+#endif
 
-#endif /* TEST_33_H_ */
+#include "debug.h"
+
+#endif /* _TEST38_H_ */
