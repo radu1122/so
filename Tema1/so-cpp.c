@@ -334,13 +334,14 @@ int main(int argc, char *argv[]) {
             }
             FILE * checkFile = NULL;
             char filePath[MAX_LEN];
-            strcpy(filePath, "./");
+            strcpy(filePath, "./_test/inputs/");
             strcat(filePath, fileName);
             checkFile = fopen(filePath, "r");
             int existsFile = 0;
             if (checkFile == NULL) {
                 for (int j = 0; j < pathsNo; j++) {
-                    strcpy(filePath, paths[j]);
+                    strcpy(filePath, "./_test/inputs/");
+                    strcat(filePath, paths[j]);
                     strcat(filePath, fileName);
                     checkFile = fopen(filePath, "r");
                     if (checkFile != NULL) {
