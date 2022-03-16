@@ -204,9 +204,12 @@ int main(int argc, char *argv[]) {
         }
         line[strcspn(line, "\n")] = 0;
         if (line[0] == '#' && line[1] == 'd') {
-            if (ifsArr[ifPpointer] > 0) {
-                continue;
+            if (ifPpointer >= 0) {
+                if (ifsArr[ifPpointer] > 0) {
+                    continue;
+                }
             }
+
             char value[MAX_LEN];
             char key[MAX_LEN];
             sscanf(line, "#define %s %[^\n]", key, value);
@@ -349,8 +352,10 @@ int main(int argc, char *argv[]) {
                 ifsArr[ifPpointer] = -2;
             }
         } else if (line[0] != '#') {
-            if (ifsArr[ifPpointer] > 0) {
-                continue;
+            if (ifPpointer >= 0) {
+                if (ifsArr[ifPpointer] > 0) {
+                    continue;
+                }
             }
             char elems[MAX_LEN][MAX_LEN];
             memset(elems, 0, MAX_LEN * MAX_LEN);
