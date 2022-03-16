@@ -193,15 +193,28 @@ int main(int argc, char *argv[]) {
     int ifsArr[10];
     int ifPpointer = -1;
 
+    FILE * filesPtrArr[10];
+    int filesPointer = -1;
+
     while (1) {
-        if (existsInFile == 1) {
-            statusFgets = fgets(line, MAX_LEN, fIn);
+        if (filesPointer != -1) {
+            statusFgets = fgets(line, MAX_LEN, filesPtrArr[filesPointer]);
+            if (statusFgets == NULL) {
+                fclose(filesPtrArr[filesPointer]);
+                filesPointer--;
+                continue;
+            }
         } else {
-            statusFgets = fgets(line, MAX_LEN, stdin);
+            if (existsInFile == 1) {
+                statusFgets = fgets(line, MAX_LEN, fIn);
+            } else {
+                statusFgets = fgets(line, MAX_LEN, stdin);
+            }
+            if (statusFgets == NULL) {
+                break;
+            }
         }
-        if (statusFgets == NULL) {
-            break;
-        }
+
         line[strcspn(line, "\n")] = 0;
         if (line[0] == '#' && line[1] == 'd') {
             if (ifPpointer >= 0) {
@@ -312,6 +325,45 @@ int main(int argc, char *argv[]) {
             }
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'l' && line[3] == 's') {
             ifsArr[ifPpointer] = -ifsArr[ifPpointer];
+        } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'n' && line[3] == 'c') {
+            char fileName[MAX_LEN];
+            sscanf(line, "#include %s", fileName);
+            if (fileName[0] == '"') {
+                memmove(fileName, fileName + 1, strlen(fileName));
+                fileName[strlen(fileName) -1] = '\0';
+            }
+            FILE * checkFile = NULL;
+            checkFile = fopen(fileName, "r");
+            int existsFile = 0;
+            if (checkFile == NULL) {
+                for (int j = 0; j < pathsNo; j++) {
+                    char filePath[MAX_LEN];
+                    strcpy(filePath, paths[j]);
+                    strcat(filePath, fileName);
+                    checkFile = fopen(filePath, "r");
+                    if (checkFile != NULL) {
+                        existsFile = 1;
+                        fclose(checkFile);
+                        strcpy(fileName, filePath);
+                        break;
+                    }
+                }
+            } else {
+                existsFile = 1;
+                fclose(checkFile);
+            }
+
+            if (existsFile == 0) {
+                fprintf(stderr, "Include file not found");
+                return -1;
+            } else {
+                if (filesPointer == -1) {
+                    filesPointer = 0;
+                } else {
+                    filesPointer++;
+                }
+                filesPtrArr[filesPointer] = fopen(fileName, "r");
+            }
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'n' && line[3] == 'd') {
             ifsArr[ifPpointer] = 0;
             ifPpointer--;

@@ -1,8 +1,7 @@
-int main() {
-#if 0
-	printf("True!\n");
-#else
-	printf("False!\n");
-#endif
+#include "D:\Facultate\so\Tema1\test32.h"
+
+int main()
+{
+	printf("var = %d\n", var);
 	return 0;
 }
