@@ -338,10 +338,11 @@ int main(int argc, char *argv[]) {
             strcat(filePath, fileName);
             checkFile = fopen(filePath, "r");
             int existsFile = 0;
-            strcpy(filePath, "");
             if (checkFile == NULL) {
                 for (int j = 0; j < pathsNo; j++) {
+                    strcpy(filePath, "");
                     strcat(filePath, paths[j]);
+                    strcat(filePath, "\\");
                     strcat(filePath, fileName);
                     checkFile = fopen(filePath, "r");
                     if (checkFile != NULL) {
