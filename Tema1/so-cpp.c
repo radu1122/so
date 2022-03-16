@@ -342,7 +342,7 @@ int main(int argc, char *argv[]) {
                 for (int j = 0; j < pathsNo; j++) {
                     strcpy(filePath, "");
                     strcat(filePath, paths[j]);
-                    strcat(filePath, "\\");
+                    strcat(filePath, "/");
                     strcat(filePath, fileName);
                     checkFile = fopen(filePath, "r");
                     if (checkFile != NULL) {
