@@ -225,6 +225,16 @@ int main(int argc, char *argv[]) {
 
             char value[MAX_LEN];
             char key[MAX_LEN];
+            memset(value, 0, MAX_LEN);
+
+            int numberOfSpaces = 0;
+
+            for (int j = 0; j < strlen(line); j++) {
+                if (line[j] == ' ') {
+                    numberOfSpaces++;
+                }
+            }
+
             sscanf(line, "#define %s %[^\n]", key, value);
             if (value[strlen(value) - 1] != '\\') {
 //                if (value[0] == '"') {
@@ -233,23 +243,28 @@ int main(int argc, char *argv[]) {
 //                }
                 char elems[MAX_LEN][MAX_LEN];
                 memset(elems, 0, MAX_LEN * MAX_LEN);
-                int tokensNo = tokenize(value, elems);
-                char finalValue[MAX_LEN];
+                if (numberOfSpaces < 2) {
+                    int tokensNo = tokenize(value, elems);
+                    char finalValue[MAX_LEN];
 
-                strcpy(finalValue, "");
-                for (int j = 0; j < tokensNo; j++) {
-                    char waitedValue[MAX_LEN];
-                    memset(waitedValue, 0, MAX_LEN);
-                    status = hashmapGetOne(map, elems[j], waitedValue);
-                    if (status == 1) {
-                        strcpy(elems[j], waitedValue);
-                    } else {
+                    strcpy(finalValue, "");
+                    for (int j = 0; j < tokensNo; j++) {
+                        char waitedValue[MAX_LEN];
                         memset(waitedValue, 0, MAX_LEN);
-                    }
-                    strcat(finalValue, elems[j]);
+                        status = hashmapGetOne(map, elems[j], waitedValue);
+                        if (status == 1) {
+                            strcpy(elems[j], waitedValue);
+                        } else {
+                            memset(waitedValue, 0, MAX_LEN);
+                        }
+                        strcat(finalValue, elems[j]);
 
+                    }
+                    hashmapPut(map, key, finalValue);
+                } else {
+                    hashmapPut(map, key, "exists");
                 }
-                hashmapPut(map, key, finalValue);
+
 //                printf("key: %s\nfinal val: %s\n", key, finalValue);
             } else {
                 char finalValue[MAX_LEN];
