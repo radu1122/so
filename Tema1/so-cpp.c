@@ -333,11 +333,13 @@ int main(int argc, char *argv[]) {
                 fileName[strlen(fileName) -1] = '\0';
             }
             FILE * checkFile = NULL;
-            checkFile = fopen(fileName, "r");
+            char filePath[MAX_LEN];
+            strcpy(filePath, "./");
+            strcat(filePath, fileName);
+            checkFile = fopen(filePath, "r");
             int existsFile = 0;
             if (checkFile == NULL) {
                 for (int j = 0; j < pathsNo; j++) {
-                    char filePath[MAX_LEN];
                     strcpy(filePath, paths[j]);
                     strcat(filePath, fileName);
                     checkFile = fopen(filePath, "r");
@@ -351,6 +353,7 @@ int main(int argc, char *argv[]) {
             } else {
                 existsFile = 1;
                 fclose(checkFile);
+                strcpy(fileName, filePath);
             }
 
             if (existsFile == 0) {
