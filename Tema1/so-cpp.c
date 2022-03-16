@@ -340,7 +340,6 @@ int main(int argc, char *argv[]) {
             int existsFile = 0;
             if (checkFile == NULL) {
                 for (int j = 0; j < pathsNo; j++) {
-                    strcpy(filePath, "./_test/inputs/");
                     strcat(filePath, paths[j]);
                     strcat(filePath, fileName);
                     checkFile = fopen(filePath, "r");
