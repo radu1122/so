@@ -357,7 +357,7 @@ int main(int argc, char *argv[]) {
             }
 
             if (existsFile == 0) {
-                fprintf(stderr, "Include file not found");
+                fprintf(stderr, "Include file not found: %s\n", filePath);
                 return -1;
             } else {
                 if (filesPointer == -1) {
