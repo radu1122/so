@@ -37,7 +37,8 @@ static unsigned int hashing(hashmap * m, unsigned char *str) {
 static hashmap * newHashmap() {
     int i = 0;
     hashmap* map = (hashmap*) malloc(sizeof(hashmap));
-    if(!map) exit(12);
+    if(!map)
+        exit(12);
 
     map->data = (mapElem*) malloc(512 * sizeof(mapElem));
     if(!map->data) exit(12);

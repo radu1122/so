@@ -5,13 +5,13 @@
 
 int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
     char delimit[] = "\t \"[]{}<>=+-*/%!&|^.,:;()\\";
-
     int n = 0;
     size_t i = 0;
     char *ret = NULL;
     int first;
     while(i < strlen(input)) {
         ret = strchr(delimit, (int) input[i]);
+
         if (ret != NULL) {
             strncpy(elems[n], input + i, 1);
             elems[n][1] = 0;

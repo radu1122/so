@@ -1,34 +1,31 @@
-Nume:
-Grupă:
+Nume: Radu-Andrei Dumitrescu
+Grupă: 332CA 2022
 
-# Tema <NR> TODO
-# Este recomandat să folosiți diacritice
+# Tema 1
 
-Organizare
+Structura
 -
-1. Explicație pentru structura creată (sau soluția de ansamblu aleasă):
 
-***Obligatoriu:***
-* De făcut referință la abordarea generală menționată în paragraful de mai sus. Aici se pot băga bucăți de cod/funcții - etc.
-* Consideri că tema este utilă?
-* Consideri implementarea naivă, eficientă, se putea mai bine?
-
-***Opțional:***
-* De menționat cazuri speciale (corner cases), nespecificate în enunț și cum au fost tratate.
+* am facut un fisier hashmap.h pentru toata implementarea hashmapului
+* fisierul main unde este toata logica programului care este impartita in 3 functii
 
 
 Implementare
 -
 
-* De specificat dacă întregul enunț al temei e implementat
-* Dacă există funcționalități extra, pe lângă cele din enunț - descriere succintă (maximum 3-4 rânduri/funcționalitate) + motivarea lor (maximum o frază)
-* De specificat funcționalitățile lipsă din enunț (dacă există) și menționat dacă testele reflectă sau nu acest lucru
-* Dificultăți întâmpinate
-* Lucruri interesante descoperite pe parcurs
+* implementarea hashmapului am ales sa o fac cu linear probing din ratiuni de a simplifica implementarea
+* toata implementarea analizatorului de cod s-a bazat pe a puna in hashmap perechile (key, value) de #define-uri
+* si apoi fiecare linie de cod care nu incepea cu # sa o impart pe tokeni
+* impartirea pe tokeni am facut-o dupa delims oferiti ca recomandare in enunt
+* ce am facut in plus in implementare a fost sa adaug si delimitatorul gasit in vectorul de tokeni
+* apoi in mod banal iteram prin tokeni si modificam valoarea daca gaseam acel token ca si key in hashmap
+* pe aceeasi iteratie construiam si linia finala de cod pe care apoi o afisam sau o scriam in file
+* un element challeging a fost sa am mai multe if-uri imbricate asa ca am ales sa folosesc un fel de stiva improvizata
+* acelasi lucru si pentru include in include pentru ca nu am apelez la o metoda recursiva
 
 Cum se compilează și cum se rulează?
 -
-* ce compileaza folosind make
+* ce compileaza folosind make - Linux, nmake - Windows
 * se ruleaza cu: so-cpp [-D <SYMBOL>[=<MAPPING>]] [-I <DIR>] [<INFILE>] [ [-o] <OUTFILE>]
 
 Bibliografie
@@ -40,3 +37,18 @@ Git
 -
 1. Link către repo-ul de git: https://github.com/radu1122/so
 Daca este nevoie pot da acces la git
+
+Probleme intampinate:
+-
+
+* Initial nu declarasem toate variabilele la inceput si a trebuit sa fac refacgoring ca sa mearga pe windows
+* a trebuit sa adaug "#define _CRT_SECURE_NO_DEPRECATE" pentru functiile din string.h
+
+
+Comentarii
+-
+
+* Mi se pare utila tema pentru a intelege mai bine cum se face code analysis
+* Consider ca nu am folosit neaparat cea mai buna abordare dpdv al optimizarii, dar rapida dpdv al scrisului de cod
+* Mi se pare ca cel mai mare challenge al temei a fost sa implementez in C deoarece nu am functii predefine precum split
+* Un corner case intalnit a fost ca fisierul de output pe unele teste nu era specificat cu -o in argumente
