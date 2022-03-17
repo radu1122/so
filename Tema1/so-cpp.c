@@ -455,7 +455,7 @@ int main(int argc, char *argv[]) {
             strcpy(finalLine, "");
             ghilimeleNumbers = 0;
 
-            for (int j = 0; j < tokensNo; j++) {
+            for (j = 0; j < tokensNo; j++) {
                 if (strcmp(elems[j], "\"") == 0) {
                     ghilimeleNumbers++;
                     strcat(finalLine, elems[j]);
