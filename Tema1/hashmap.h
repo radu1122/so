@@ -12,6 +12,7 @@ typedef struct hashmap {
     int currSize;
     mapElem *data;
 } hashmap;
+
 static unsigned int hashing(hashmap * m, unsigned char *str);
 static hashmap * newHashmap();
 static int getNewKey(hashmap* m, unsigned char *key);
@@ -21,19 +22,20 @@ static int hashmapGetOne(hashmap * m, unsigned char * key, unsigned char * value
 static void hashmapFree(hashmap * m);
 static int hashmapRemoveOne(hashmap * m, unsigned char * key);
 
-// https://stackoverflow.com/questions/7666509/hash-function-for-string
+/* https://stackoverflow.com/questions/7666509/hash-function-for-string */
 static unsigned int hashing(hashmap * m, unsigned char *str) {
     unsigned long hash = 5381;
     int c;
 
     while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+        hash = ((hash << 5) + hash) + c;
 
     return hash % m->size;
 }
 
 
 static hashmap * newHashmap() {
+    int i = 0;
     hashmap* map = (hashmap*) malloc(sizeof(hashmap));
     if(!map) exit(12);
 
@@ -43,7 +45,7 @@ static hashmap * newHashmap() {
     map->size = 512;
     map->currSize = 0;
 
-    for (int i = 0; i < map->size; i++) {
+    for (i = 0; i < map->size; i++) {
         map->data[i].used = 0;
         memset(map->data[i].data, 0, 256);
         memset(map->data[i].key, 0, 256);
@@ -83,8 +85,7 @@ static int mapResize(hashmap* m) {
     int status;
     mapElem* curr;
 
-    mapElem* temp = (mapElem *)
-            calloc(2 * m->size, sizeof(mapElem));
+    mapElem* temp = (mapElem *) calloc(2 * m->size, sizeof(mapElem));
     if(!temp) exit(12);
 
     curr = m->data;

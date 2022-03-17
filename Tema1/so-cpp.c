@@ -1,6 +1,5 @@
 #include "hashmap.h"
 #include <stdio.h>
-#include <stdlib.h>
 #define MAX_LEN 256
 
 int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
@@ -8,8 +7,9 @@ int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
 
     int n = 0;
     int i = 0;
+    char *ret = NULL;
+    int first;
     while(i < strlen(input)) {
-        char *ret = NULL;
         ret = strchr(delimit, (int) input[i]);
         if (ret != NULL) {
             strncpy(elems[n], input + i, 1);
@@ -17,7 +17,7 @@ int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
             n++;
             i++;
         } else {
-            int first = i;
+            first = i;
             i++;
             while(strchr(delimit, input[i]) == NULL) {
                 i++;
@@ -61,8 +61,55 @@ int main(int argc, char *argv[]) {
     int existsOutFile = 0;
     char outFile[MAX_LEN];
 
+    char fileName[MAX_LEN];
+
+    char line[MAX_LEN];
+    char * statusFgets;
+    int status;
+    int activeIf = 0;
+    int activeIfD = 0;
+
+    int ifsArr[10];
+    int ifPpointer = -1;
+
+    FILE * filesPtrArr[10];
+    int filesPointer = -1;
+
+    int ghilimeleNumbers = 0;
+
     memset(inFile, 0, MAX_LEN);
     memset(outFile, 0, MAX_LEN);
+
+    FILE * fIn = NULL;
+    FILE * fOut = NULL;
+
+    char value[MAX_LEN];
+    char key[MAX_LEN];
+
+    char finalLine[MAX_LEN];
+
+
+    char elems[MAX_LEN][MAX_LEN];
+
+    int tokensNo;
+
+    char finalValue[MAX_LEN];
+    char waitedValue[MAX_LEN];
+
+    char *equalPtr = NULL;
+
+    char elem[MAX_LEN];
+
+    int j = 0;
+
+    FILE * checkFile = NULL;
+    char filePath[MAX_LEN];
+
+    int sw;
+
+    int existsFile;
+
+
     while(i < argc) {
         if (argv[i][0] == '-') {
             if (argv[i][1] != 'D' && argv[i][1] != 'I' && argv[i][1] != 'o') {
@@ -76,13 +123,10 @@ int main(int argc, char *argv[]) {
                     step++;
                     continue;
                 } else {
-                   char key[MAX_LEN];
-                   char value[MAX_LEN];
                    memset(key, 0, MAX_LEN);
                    memset(value, 0, MAX_LEN);
                    if (strlen(argv[i]) > 2) {
-                       // -DDEBUG
-                       char *equalPtr = strchr(argv[i], '=');
+                       equalPtr = strchr(argv[i], '=');
                        if(equalPtr != NULL) {
                            memcpy(key, argv[i] + 2, equalPtr - argv[i] - 2);
                            memcpy(value, equalPtr + 1, strlen(argv[i]) - strlen(key) - 2);
@@ -91,7 +135,7 @@ int main(int argc, char *argv[]) {
                        }
                    } else {
                        i++;
-                       char *equalPtr = strchr(argv[i], '=');
+                       equalPtr = strchr(argv[i], '=');
                        if(equalPtr != NULL) {
                            memcpy(key, argv[i], equalPtr - argv[i]);
                            memcpy(value, equalPtr + 1, strlen(argv[i]) - strlen(key));
@@ -113,7 +157,7 @@ int main(int argc, char *argv[]) {
                     continue;
                 } else {
                     if (strlen(argv[i]) > 2) {
-                        char elem[MAX_LEN];
+                        memset(elem, 0, MAX_LEN);
                         sscanf(argv[i], "-I%s", elem);
                         memcpy(paths[pathsNo], elem, strlen(elem));
                         paths[pathsNo][strlen(elem)] = 0;
@@ -146,7 +190,7 @@ int main(int argc, char *argv[]) {
             if (argv[i][0] == '-' && argv[i][1] == 'o') {
                 existsOutFile = 1;
                 if (strlen(argv[i]) > 2) {
-                    char elem[MAX_LEN];
+                    memset(elem, 0, MAX_LEN);
                     sscanf(argv[i], "-o%s", elem);
                     memcpy(outFile, elem, strlen(elem));
                     outFile[strlen(elem)] = 0;
@@ -169,12 +213,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-//    for(int i = 0; i < pathsNo; i++) {
-//        printf("path %d: %s\n", i, paths[i]);
-//    }
-//    printf("%s\n", inFile);
-    FILE * fIn = NULL;
-    FILE * fOut = NULL;
+
     if (existsInFile == 1) {
         fIn = fopen(inFile, "r");
     }
@@ -184,17 +223,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    char line[MAX_LEN];
-    char * statusFgets;
-    int status;
-    int activeIf = 0;
-    int activeIfD = 0;
 
-    int ifsArr[10];
-    int ifPpointer = -1;
-
-    FILE * filesPtrArr[10];
-    int filesPointer = -1;
 
     while (1) {
         if (filesPointer != -1) {
@@ -223,26 +252,19 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            char value[MAX_LEN];
-            char key[MAX_LEN];
+
             memset(value, 0, MAX_LEN);
+            memset(key, 0, MAX_LEN);
 
 
             sscanf(line, "#define %s %[^\n]", key, value);
             if (strlen(value) > 0) {
                 if (value[strlen(value) - 1] != '\\') {
-    //                if (value[0] == '"') {
-    //                    memmove(value, value + 1, strlen(value));
-    //                    value[strlen(value) - 1] = '\0';
-    //                }
-                    char elems[MAX_LEN][MAX_LEN];
                     memset(elems, 0, MAX_LEN * MAX_LEN);
-                    int tokensNo = tokenize(value, elems);
-                    char finalValue[MAX_LEN];
+                    tokensNo = tokenize(value, elems);
 
                     strcpy(finalValue, "");
-                    for (int j = 0; j < tokensNo; j++) {
-                        char waitedValue[MAX_LEN];
+                    for (j = 0; j < tokensNo; j++) {
                         memset(waitedValue, 0, MAX_LEN);
                         status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                         if (status == 1) {
@@ -254,11 +276,9 @@ int main(int argc, char *argv[]) {
 
                     }
                     hashmapPut(map, (unsigned char *) key, (unsigned char *) finalValue);
-    //                printf("key: %s\nfinal val: %s\n", key, finalValue);
                 } else {
-                    char finalValue[MAX_LEN];
-                    char elems[MAX_LEN][MAX_LEN];
-                    int sw = 1;
+                    memset(elems, 0, MAX_LEN * MAX_LEN);
+                    sw = 1;
                     strcpy(line, value);
                     memset(finalValue, 0, MAX_LEN);
                     do {
@@ -268,9 +288,8 @@ int main(int argc, char *argv[]) {
                             sw = 0;
                         }
                         memset(elems, 0, MAX_LEN * MAX_LEN);
-                        int tokensNo = tokenize(line, elems);
-                        for (int j = 0; j < tokensNo; j++) {
-                            char waitedValue[MAX_LEN];
+                        tokensNo = tokenize(line, elems);
+                        for (j = 0; j < tokensNo; j++) {
                             memset(waitedValue, 0, MAX_LEN);
                             status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                             if (status == 1) {
@@ -291,13 +310,12 @@ int main(int argc, char *argv[]) {
                     } while (sw == 1);
 
                     hashmapPut(map, (unsigned char *) key, (unsigned char *) finalValue);
-    //                printf("key: %s\nfinal val: %s\n", key, finalValue);
                 }
             } else {
                 hashmapPut(map, (unsigned char *) key, (unsigned char *) value);
             }
         } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == ' ') {
-            char key[MAX_LEN];
+            memset(key, 0 , MAX_LEN);
             sscanf(line, "#if %s", key);
             activeIf = checkIfIsTrue(map, key);
             if (ifPpointer == -1) {
@@ -311,17 +329,18 @@ int main(int argc, char *argv[]) {
                 ifsArr[ifPpointer] = -1;
             }
         }  else if (line[0] == '#' && line[1] == 'u' && line[2] == 'n' && line[3] == 'd') {
-            char key[MAX_LEN];
+            memset(key, 0 , MAX_LEN);
             sscanf(line, "#undef %s", key);
-            char waitedValue[MAX_LEN];
-            int status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
+            memset(waitedValue, 0 , MAX_LEN);
+
+            status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
 
             if (status == 1) {
                 hashmapRemoveOne(map, (unsigned char *) key);
             }
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'l' && line[3] == 'i') {
             if (ifsArr[ifPpointer] == 1) {
-                char key[MAX_LEN];
+                memset(key, 0 , MAX_LEN);
                 sscanf(line, "#elif %s", key);
                 activeIf = checkIfIsTrue(map, key);
                 if (activeIf == 1) {
@@ -333,20 +352,23 @@ int main(int argc, char *argv[]) {
         } else if (line[0] == '#' && line[1] == 'e' && line[2] == 'l' && line[3] == 's') {
             ifsArr[ifPpointer] = -ifsArr[ifPpointer];
         } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'n' && line[3] == 'c') {
-            char fileName[MAX_LEN];
+            memset(fileName, 0, MAX_LEN);
             sscanf(line, "#include %s", fileName);
             if (fileName[0] == '"') {
                 memmove(fileName, fileName + 1, strlen(fileName));
                 fileName[strlen(fileName) -1] = '\0';
             }
-            FILE * checkFile = NULL;
-            char filePath[MAX_LEN];
+
+
+            checkFile = NULL;
+            memset(filePath, 0, MAX_LEN);
+
             strcpy(filePath, "./_test/inputs/");
             strcat(filePath, fileName);
             checkFile = fopen(filePath, "r");
-            int existsFile = 0;
+            existsFile = 0;
             if (checkFile == NULL) {
-                for (int j = 0; j < pathsNo; j++) {
+                for (j = 0; j < pathsNo; j++) {
                     strcpy(filePath, "");
                     strcat(filePath, paths[j]);
                     strcat(filePath, "/");
@@ -380,10 +402,11 @@ int main(int argc, char *argv[]) {
             ifsArr[ifPpointer] = 0;
             ifPpointer--;
         } else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == 'd') {
-            char key[MAX_LEN];
+            memset(key, 0, MAX_LEN);
             sscanf(line, "#ifdef %s", key);
-            char waitedValue[MAX_LEN];
-            int status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
+            memset(waitedValue, 0, MAX_LEN);
+
+            status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
             if (status != 1) {
                 activeIfD = 1;
             }
@@ -398,10 +421,12 @@ int main(int argc, char *argv[]) {
                 ifsArr[ifPpointer] = -2;
             }
         }  else if (line[0] == '#' && line[1] == 'i' && line[2] == 'f' && line[3] == 'n') {
-            char key[MAX_LEN];
+            memset(key, 0, MAX_LEN);
+
             sscanf(line, "#ifndef %s", key);
-            char waitedValue[MAX_LEN];
-            int status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
+            memset(waitedValue, 0, MAX_LEN);
+
+            status = hashmapGetOne(map, (unsigned char *) key, (unsigned char *) waitedValue);
             if (status == 1) {
                 activeIfD = 1;
             }
@@ -421,12 +446,12 @@ int main(int argc, char *argv[]) {
                     continue;
                 }
             }
-            char elems[MAX_LEN][MAX_LEN];
             memset(elems, 0, MAX_LEN * MAX_LEN);
-            int tokensNo = tokenize(line, elems);
-            char finalLine[256];
+            tokensNo = tokenize(line, elems);
+            memset(finalLine, 0, MAX_LEN);
+
             strcpy(finalLine, "");
-            int ghilimeleNumbers = 0;
+            ghilimeleNumbers = 0;
 
             for (int j = 0; j < tokensNo; j++) {
                 if (strcmp(elems[j], "\"") == 0) {
@@ -434,8 +459,9 @@ int main(int argc, char *argv[]) {
                     strcat(finalLine, elems[j]);
                     continue;
                 }
-                char waitedValue[MAX_LEN];
-                int status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
+                memset(waitedValue, 0, MAX_LEN);
+
+                status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                 if (status == 1) {
 
                     if (ghilimeleNumbers % 2 == 0) {
