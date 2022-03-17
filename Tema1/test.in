@@ -1,2 +1,11 @@
-#include "test33.h"
-	debug;
+#define VAR0 1 \
+        + 2\
+        + 3\
+        + 4
+
+int main() {
+    int y = VAR0 + 1;
+    printf("%d\n", VAR0);
+
+    return 0;
+}

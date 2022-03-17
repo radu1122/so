@@ -298,7 +298,7 @@ int main(int argc, char *argv[]) {
                                 strcpy(elems[j], waitedValue);
                             }
                             if (strcmp(elems[j],"\"") != 0 && strcmp(elems[j], " ")) {
-                                strcpy(finalValue, elems[j]);
+                                strcat(finalValue, elems[j]);
                             }
                         }
                         if (existsInFile == 1) {
