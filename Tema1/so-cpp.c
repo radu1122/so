@@ -1,8 +1,7 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include "hashmap.h"
 #include <stdio.h>
 #define MAX_LEN 256
-#define _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_DEPRECATE
 
 int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
     char delimit[] = "\t \"[]{}<>=+-*/%!&|^.,:;()\\";
