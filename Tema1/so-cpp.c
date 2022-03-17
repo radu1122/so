@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
     memset(outFile, 0, MAX_LEN);
 
 
-    while(i < argc) {
+    while(i < (size_t) argc) {
         if (argv[i][0] == '-') {
             if (argv[i][1] != 'D' && argv[i][1] != 'I' && argv[i][1] != 'o') {
                 fprintf(stderr, "Bad arguments");
@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
                 i++;
                 existsOutFile = 1;
             }
-            if (argc > i) {
+            if ((size_t) argc > i) {
                 fprintf(stderr, "bad input file");
                 return -1;
             }
@@ -265,7 +265,7 @@ int main(int argc, char *argv[]) {
                     tokensNo = tokenize(value, elems);
 
                     strcpy(finalValue, "");
-                    for (j = 0; j < tokensNo; j++) {
+                    for (j = 0; j < (size_t) tokensNo; j++) {
                         memset(waitedValue, 0, MAX_LEN);
                         status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                         if (status == 1) {
@@ -290,7 +290,7 @@ int main(int argc, char *argv[]) {
                         }
                         memset(elems, 0, MAX_LEN * MAX_LEN);
                         tokensNo = tokenize(line, elems);
-                        for (j = 0; j < tokensNo; j++) {
+                        for (j = 0; j < (size_t) tokensNo; j++) {
                             memset(waitedValue, 0, MAX_LEN);
                             status = hashmapGetOne(map, (unsigned char *) elems[j], (unsigned char *) waitedValue);
                             if (status == 1) {
@@ -369,7 +369,7 @@ int main(int argc, char *argv[]) {
             checkFile = fopen(filePath, "r");
             existsFile = 0;
             if (checkFile == NULL) {
-                for (j = 0; j < pathsNo; j++) {
+                for (j = 0; j < (size_t) pathsNo; j++) {
                     strcpy(filePath, "");
                     strcat(filePath, paths[j]);
                     strcat(filePath, "/");
@@ -454,7 +454,7 @@ int main(int argc, char *argv[]) {
             strcpy(finalLine, "");
             ghilimeleNumbers = 0;
 
-            for (j = 0; j < tokensNo; j++) {
+            for (j = 0; j < (size_t) tokensNo; j++) {
                 if (strcmp(elems[j], "\"") == 0) {
                     ghilimeleNumbers++;
                     strcat(finalLine, elems[j]);
