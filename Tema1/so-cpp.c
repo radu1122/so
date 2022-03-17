@@ -6,7 +6,7 @@ int tokenize(char * input, char elems[MAX_LEN][MAX_LEN]) {
     char delimit[] = "\t \"[]{}<>=+-*/%!&|^.,:;()\\";
 
     int n = 0;
-    int i = 0;
+    size_t i = 0;
     char *ret = NULL;
     int first;
     while(i < strlen(input)) {
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     int step = 0;
     char paths[MAX_LEN][MAX_LEN];
     int pathsNo = 0;
-    int i = 1;
+    size_t i = 1;
     int existsInFile = 0;
     char inFile[MAX_LEN];
 
@@ -77,9 +77,6 @@ int main(int argc, char *argv[]) {
 
     int ghilimeleNumbers = 0;
 
-    memset(inFile, 0, MAX_LEN);
-    memset(outFile, 0, MAX_LEN);
-
     FILE * fIn = NULL;
     FILE * fOut = NULL;
 
@@ -100,7 +97,7 @@ int main(int argc, char *argv[]) {
 
     char elem[MAX_LEN];
 
-    int j = 0;
+    size_t j = 0;
 
     FILE * checkFile = NULL;
     char filePath[MAX_LEN];
@@ -108,6 +105,9 @@ int main(int argc, char *argv[]) {
     int sw;
 
     int existsFile;
+
+    memset(inFile, 0, MAX_LEN);
+    memset(outFile, 0, MAX_LEN);
 
 
     while(i < argc) {
@@ -296,7 +296,7 @@ int main(int argc, char *argv[]) {
                                 strcpy(elems[j], waitedValue);
                             }
                             if (strcmp(elems[j],"\"") != 0 && strcmp(elems[j], " ")) {
-                                strcat(finalValue, elems[j]);
+                                strcpy(finalValue, elems[j]);
                             }
                         }
                         if (existsInFile == 1) {
