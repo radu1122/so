@@ -88,8 +88,9 @@ int main(int argc, char *argv[])
 	memcpy(&buf[1024], "AAAAAAAAAAAAAAAA", 16);
 	memcpy(&buf[1024-128], "BBBBBBBBBBBBBBBB", 16);
 
-
 	FAIL_IF(!compare_file(fpath, buf, 2048), "Incorrect data in file\n");
+
+
 
 	return 0;
 }
