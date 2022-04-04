@@ -1,0 +1,43 @@
+Nume: Radu-Andrei Dumitrescu
+Grupă: 332CA 2022
+
+# Tema 2
+
+Structura
+-
+
+* am facut un fisier so_stdio.c pentru toata implementarea librariei
+* nu am modificat deloc fisierul so_stdio.h din schelet
+
+
+Implementare
+-
+
+* cel mai important punct al implementarii a fost sa determin de ce elemente am nevoie in structura
+* apoi fiecare functie a fost destul de easy de implementat pentru ca mare parte aveam deja in laboratorul 2
+
+Cum se compilează și cum se rulează?
+-
+* ce compileaza folosind make - Linux
+
+Bibliografie
+-
+
+* https://code.woboq.org/userspace/glibc/libio/stdio.h.html
+
+Git
+-
+1. Link către repo-ul de git: https://github.com/radu1122/so
+Daca este nevoie pot da acces la git
+
+Probleme intampinate:
+-
+
+* A trebuit sa caut foarte mult care este flowul de lucru al fiecarei functii pe care am avut-o de implementat
+
+
+Comentarii
+-
+
+* Mi se pare utila tema pentru a intelege mai bine cum se functioneaza low level stdio
+* Nu consider ca am ales cel mai bun mod de a implementa functiile, sigur nu mai bun decat cele originale din stdio :) 

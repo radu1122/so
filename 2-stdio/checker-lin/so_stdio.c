@@ -22,6 +22,7 @@ struct _so_file {
 	int hasErr;
 	int bufferPtr;
 	int bufferSize;
+	int streamEOF;
 } _so_file;
 
 FUNC_DECL_PREFIX SO_FILE *so_fopen(const char *pathname, const char *mode)
@@ -73,6 +74,7 @@ FUNC_DECL_PREFIX SO_FILE *so_fopen(const char *pathname, const char *mode)
 	f->hasErr = SO_NO_ERR;
 	f->bufferPtr = 0;
 	f->bufferSize = 0;
+	f->streamEOF = 0;
 
 	if (flags == 1)
 		f->offset = lseek(fd, 0, SEEK_CUR);
@@ -179,6 +181,7 @@ size_t so_fread(void *ptr, size_t size, size_t nmemb, SO_FILE *stream)
 	int i;
 	int retStatus;
 	int count = nmemb * size;
+	unsigned char *buffer = stream->buffer;
 
 	memset(ptr, 0, count);
 
@@ -188,11 +191,20 @@ size_t so_fread(void *ptr, size_t size, size_t nmemb, SO_FILE *stream)
 				stream->bufferPtr++;
 				((unsigned char *)ptr)[i] = stream->buffer[stream->bufferPtr];
 				stream->lastOp = SO_READ_OP;
-			} else
+			} else {
+				memset(buffer, 0, SO_BUFFER_SIZE);
+				retStatus = read(stream->fd, buffer, SO_BUFFER_SIZE);
+				stream->streamEOF = 1;
 				break;
+			}
 		} else
-			((unsigned char *)ptr)[i] = (unsigned char) so_fgetc(stream) & 0xFFFF;
+			((unsigned char *)ptr)[i] = (unsigned char) so_fgetc(stream);
+		if (stream->hasErr)
+			return i / size;
 	}
+
+	if (i < count)
+		return i - 1;
 
 	return count / size;
 }
@@ -287,7 +299,7 @@ FUNC_DECL_PREFIX int so_fputc(int c, SO_FILE *stream)
 
 FUNC_DECL_PREFIX int so_feof(SO_FILE *stream)
 {
-	if (stream->offset == lseek(stream->fd, 0, SEEK_END) + 1)
+	if (stream->offset == lseek(stream->fd, 0, SEEK_END) + 1 || stream->streamEOF == 1)
 		return SO_EOF;
 	lseek(stream->fd, stream->offset, SEEK_SET);
 	return 0;
